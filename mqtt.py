@@ -1,6 +1,3 @@
-from post_db import psqlController
-from fastapi_mqtt import FastMQTT, MQTTConfig
-
 from mqtt_subscribe import *
 import json
 

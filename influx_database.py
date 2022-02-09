@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import pprint
 from influxdb import InfluxDBClient
 
-def get_influxdb(db, host='localhost', port=8086, user='root', passwd='root'):
+def get_influxdb(db, host='101.101.218.67', port=8086, user='rcs_admin', passwd='1q2w3e4r!'):
     client=InfluxDBClient(host, port, user, passwd, db)
     try:
         client.create_database(db)
@@ -45,3 +45,4 @@ def input_test(influxdb : InfluxDBClient):
     result=influxdb.query('select * from %s'%tablename)
     pprint.pprint(result.raw)
 
+db=get_influxdb(db='robotdata')

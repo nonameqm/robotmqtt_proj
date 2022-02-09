@@ -2,13 +2,10 @@ import paho.mqtt.client as mqtt
 import json
 from pydantic.types import Json
 from influx_database import *
-from post_db import psqlController
 
-influxdb=get_influxdb(db='testdb')
+
+influxdb=get_influxdb(db='robotdata')
 tablename_list=['current', 'voltage', 'status', 'errorcode']
-postgresql=psqlController()
-
-
 
 class MQTT_Subscriber():
     def __init__(self, name: str, host, port, topic):
@@ -57,19 +54,7 @@ def input_db(topic: str, influxdb : InfluxDBClient, json_data: Json):
     point['fields'] = robot_data
     point['time'] = datetime.now()-timedelta(hours=-9)
     json_body.append(point)
-    influxdb.write_points(json_body)
-
-
-    #postgresql
-    if tablename in ['status', 'errorcode']:
-        for key, value in robot_data.items():
-            try:
-                robot_update_command="UPDATE robot_data SET rbdata_value=%d where robot_serial=\'%s\' and rbdata_type=\'%s\'"%(value, robot_serial, key)
-                postgresql.command_insert(robot_update_command)
-                postgresql.db.commit()
-            except:
-                postgresql.db.rollback()
-    
+    influxdb.write_points(json_body)    
 
 
 
